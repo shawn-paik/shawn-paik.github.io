@@ -6,9 +6,51 @@
     <title>Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-    <script src="jquery.3.1.1.js"></script>
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous"></script>
 </head>
 <body>
-    Test
+    
 </body>
+<script>
+    var JSONURL = 'https://spreadsheets.google.com/feeds/list/1w40F1Xz0isXjWGpAK6PdwZnXeME5INtbz8TSfouKBVc/od6/public/values?alt=json';
+
+    function callback(data){
+        debugger;
+        var rows = [];
+    var cells = data.feed.entry;
+    
+    for (var i = 0; i < cells.length; i++){
+        var rowObj = {};
+        rowObj.timestamp = cells[i].title.$t;
+        var rowCols = cells[i].content.$t.split(',');
+        for (var j = 0; j < rowCols.length; j++){
+            var keyVal = rowCols[j].split(':');
+            rowObj[keyVal[0].trim()] = keyVal[1].trim();
+        }
+        rows.push(rowObj);
+    }
+    
+    var raw = document.createElement('p');
+    raw.innerText = JSON.stringify(rows);
+    document.body.appendChild(raw);
+    }
+
+    $(document).ready(function(){
+        
+        $.ajax({
+            url:JSONURL,
+            success: function(data){
+                callback(data);
+            }
+        });
+
+    });
+</script>
 </html>
+
+<!-- https://docs.google.com/spreadsheets/d/e/2PACX-1vSGLLGk6Pzo4trZq6fDmYw_Ifg840rU0Zvd5yuA6Mu5igoWER1c3tlBZHD-21p9Na52p6UKiBiXq8zM/pubhtml
+
+https://docs.google.com/spreadsheets/d/1w40F1Xz0isXjWGpAK6PdwZnXeME5INtbz8TSfouKBVc/edit?usp=sharing -->
