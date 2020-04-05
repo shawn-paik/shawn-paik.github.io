@@ -5,45 +5,100 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
     <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
     integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
     crossorigin="anonymous"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
 </head>
+<style>
+    .sidebar{
+        flex:1;
+    }
+    .main{
+        flex:3;
+    }
+</style>
 <body>
-    
+    <header></header>
+
+    <div class='container'>
+        <div class='flex-grid'>
+            <aside class='col sidebar'>
+
+            </aside>
+            <section class='col main'>
+                <div class='col-12'>stuff</div>
+                <div class='col-4'>stuff2</div>
+                <div class='col-4'>stuff1</div>
+                <div class='col-4'>stuff3</div>
+                <div class='col-12' id='posts'></div>
+            </section>
+        </div>
+        
+    </div>
+    <footer></footer>
 </body>
 <script>
-    var JSONURL = 'https://spreadsheets.google.com/feeds/list/1w40F1Xz0isXjWGpAK6PdwZnXeME5INtbz8TSfouKBVc/od6/public/values?alt=json';
+    const JSONURL = 'https://spreadsheets.google.com/feeds/list/1w40F1Xz0isXjWGpAK6PdwZnXeME5INtbz8TSfouKBVc/od6/public/values?alt=json';
 
-    function callback(data){
-        debugger;
+    const headers = ["title","image","share", "type", "date", "caption"];
+    function getRows(data){
         var rows = [];
-    var cells = data.feed.entry;
-    
-    for (var i = 0; i < cells.length; i++){
-        var rowObj = {};
-        rowObj.timestamp = cells[i].title.$t;
-        var rowCols = cells[i].content.$t.split(',');
-        for (var j = 0; j < rowCols.length; j++){
-            var keyVal = rowCols[j].split(':');
-            rowObj[keyVal[0].trim()] = keyVal[1].trim();
+        const feed = data.feed.entry;
+        for(var i = 0; i<feed.length; i++){
+            var post = {};
+            for (var x=0; x<headers.length; x++){
+                var cell = feed[i][`gsx$${headers[x]}`].$t
+                post[headers[x]] = cell;
+            }
+            rows.push(post);
         }
-        rows.push(rowObj);
+        return rows;
     }
-    
-    var raw = document.createElement('p');
-    raw.innerText = JSON.stringify(rows);
-    document.body.appendChild(raw);
+
+    function createPosts(data){
+        var rows = getRows(data);
+        for(var i = 0; i<rows.length;i++){
+            var title = rows[i].title;
+            var image = rows[i].image;
+            var shareLink = rows[i].share;
+            var type = rows[i].type;
+            var date = rows[i].data;
+            var caption = rows[i].caption;
+            var html = ["<div>",JSON.stringify(rows[i]),"</div>"]
+            $('#posts').append(html.join(','));
+        }
     }
+
+    // function callback(data){
+    //     var rows = [];
+    //     var cells = data.feed.entry;
+        
+    //     for (var i = 0; i < cells.length; i++){
+    //         var rowObj = {};
+    //         rowObj.timestamp = cells[i].title.$t;
+    //         var rowCols = cells[i].content.$t.split(',');
+    //         for (var j = 0; j < rowCols.length; j++){
+    //             var keyVal = rowCols[j].split(':');
+    //             rowObj[keyVal[0].trim()] = keyVal[1].trim();
+    //         }
+    //         rows.push(rowObj);
+    //     }
+        
+    //     var raw = document.createElement('p');
+    //     raw.innerText = JSON.stringify(rows);
+    //     document.body.appendChild(raw);
+    // }
 
     $(document).ready(function(){
         
         $.ajax({
             url:JSONURL,
             success: function(data){
-                callback(data);
+                createPosts(data);
             }
         });
 
