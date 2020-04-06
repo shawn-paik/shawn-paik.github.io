@@ -54,13 +54,6 @@ main {
    
 }
 
-@media screen and (max-width: 640px){
-    .sidebar{
-        font-size: 2vh;
-        margin:auto;
-        align-items:center;
-    }
-}
 
 html, body{
     height:100%;
@@ -86,15 +79,16 @@ html, body{
 .post-title{
     font-size:8vh;
     font-weight:800;
-    padding:1%;
-    flex:0;
+    margin:1%;
+    flex:1 0;
 }
 .post-image{
-    flex:1;
+    flex:1 0;
 }
 .post-share{
-    flex:1;
+    flex:1 1;
     padding:1%;
+    flex-basis:55%;
 }
 .post-comment{
     flex:1;
@@ -102,6 +96,48 @@ html, body{
 .post-date{
     flex:0;
 }
+
+@media screen and (max-width: 640px){
+    .sidebar{
+        font-size: 2vh;
+        margin:auto;
+        align-items:center;
+    }
+
+   
+}
+
+@media screen and (max-width:1024px){
+
+
+    .post-share iframe, .post-share embed, .post-share object{
+        height: calc(56.25vh);
+        width: calc(100vw - 350px);
+    }
+
+    .post-title{
+        flex:1;
+        font-size: 6vh;
+    }
+}
+
+@media screen and (max-width:500px){
+
+
+.post-share iframe, .post-share embed, .post-share object{
+    height: calc(56.25vh);
+    width: calc(100vw - 60px);
+}
+
+.post-title{
+    flex:1;
+    font-size: 6vh;
+}
+}
+
+
+ 
+
    
 </style>
 <body>
@@ -149,13 +185,13 @@ html, body{
             var shareHtml = '';
             if(shareLink.includes('youtu')){
                 shareHtml = 
-                `<iframe width="560" height="315" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+                `<iframe width="500" height="281.25" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
             }
             var html = 
             `<div class='post-wrapper'>
                 <div class='post-title'>${title}</div>
                 <div class='post-image'>
-                    <img src=${image} width='300px' height:'168.75px' />
+                    <img src=${image} width='250px' height:'140.625' />
                 </div>
                 <div class='post-share'>
                     ${shareHtml}
