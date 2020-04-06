@@ -14,36 +14,110 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" integrity="sha384-6khuMg9gaYr5AxOqhkVIODVIvm9ynTT5J4V1cfthmT+emCG6yVmEZsRHdxlotUnm" crossorigin="anonymous"></script>
 </head>
 <style>
-     .flex-grid{
-        display:flex;
-    }
+
+main,  section, aside {
+    margin: 0;
+    padding: 20px;
+    color: black;
+}
+
+main {
+    background: #000000;
+}
+.content {
+    flex: 1;
+    max-height:100vh;
+    overflow-y:auto;
+    padding-right:0;
+    padding-left:0;
+}
+
+.wrapper{
+    height:100vh;
+}
+
+.sidebar {
+    background: black;
+    flex: 0 1 300px;
+    color:white;
+    padding:10px;
+    font-size: 8vh;
+    font-weight:800;
+    overflow-y:auto;
+}
+
+
+@media screen and (min-width: 640px){
+    .flex-container {
+        display: flex;
+    }    
+   
+}
+
+@media screen and (max-width: 640px){
     .sidebar{
-        flex:1;
+        font-size: 2vh;
+        margin:auto;
+        align-items:center;
     }
-    .main{
-        flex:3;
-    }
+}
+
+html, body{
+    height:100%;
+    width:100%;
+}
+
+
+.aka{
+    color:rgb(150, 78, 150);
+}
+
+.post-wrapper{
+    display:flex;
+    flex-direction:row;
+    align-content:center;
+    align-items:center;
+    padding:5%;
+    border-bottom-style: groove;
+    border-width:1px;
+    flex-wrap:wrap;
+}  
+   
+.post-title{
+    font-size:8vh;
+    font-weight:800;
+    padding:1%;
+    flex:0;
+}
+.post-image{
+    flex:1;
+}
+.post-share{
+    flex:1;
+    padding:1%;
+}
+.post-comment{
+    flex:1;
+}
+.post-date{
+    flex:0;
+}
    
 </style>
 <body>
-    <header></header>
+</main>
+    <div class='flex-container wrapper'>
 
-    <div class='container'>
-        <div class='flex-grid'>
             <aside class='col sidebar'>
-
+                <p>Shawn Paik <br /><span class='aka'>AKA</span> <br /> Pawn Shake <br /> <span class='aka'>AKA</span> <br />Sorfresh</p>
             </aside>
-            <section class='col main'>
-                <div class='col-12'>stuff</div>
-                <div class='col-4'>stuff2</div>
-                <div class='col-4'>stuff1</div>
-                <div class='col-4'>stuff3</div>
-                <div class='col-12' id='posts'></div>
+            <section class='content'>
             </section>
-        </div>
         
     </div>
     <footer></footer>
+</main>
+    
 </body>
 <script>
     const JSONURL = 'https://spreadsheets.google.com/feeds/list/1w40F1Xz0isXjWGpAK6PdwZnXeME5INtbz8TSfouKBVc/od6/public/values?alt=json';
@@ -70,10 +144,26 @@
             var image = rows[i].image;
             var shareLink = rows[i].share;
             var type = rows[i].type;
-            var date = rows[i].data;
+            var date = rows[i].date;
             var caption = rows[i].caption;
-            var html = ["<div>",JSON.stringify(rows[i]),"</div>"]
-            $('#posts').append(html.join(','));
+            var shareHtml = '';
+            if(shareLink.includes('youtu')){
+                shareHtml = 
+                `<iframe width="560" height="315" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            }
+            var html = 
+            `<div class='post-wrapper'>
+                <div class='post-title'>${title}</div>
+                <div class='post-image'>
+                    <img src=${image} width='300px' height:'168.75px' />
+                </div>
+                <div class='post-share'>
+                    ${shareHtml}
+                </div>
+                <div class='post-comment'>${caption}</div>
+                <div class='post-date'>${date}</div>
+            </div>`;
+            $('.content').append(html);
         }
     }
 
