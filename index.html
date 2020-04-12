@@ -71,31 +71,20 @@ html, body{
     align-content:center;
     align-items:center;
     padding:5%;
-    border-bottom-style: groove;
-    border-width:1px;
     flex-wrap:wrap;
+    text-align:center;
+    border-bottom-style:groove;
 }  
+
+.post{
+    flex:20%;
+    padding:20px;
+    height:300px;
+    align-content: center;
+    vertical-align:middle;
+}
    
-.post-title{
-    font-size:8vh;
-    font-weight:800;
-    margin:1%;
-    flex:1 0;
-}
-.post-image{
-    flex:1 0;
-}
-.post-share{
-    flex:1 1;
-    padding:1%;
-    flex-basis:57%;
-}
-.post-comment{
-    flex:1;
-}
-.post-date{
-    flex:0;
-}
+
 
 @media screen and (max-width: 640px){
     .sidebar{
@@ -106,33 +95,16 @@ html, body{
 
    
 }
-
-@media screen and (max-width:1024px){
-
-
-    .post-share iframe, .post-share embed, .post-share object{
-        height: calc(56.25vh);
-        width: calc(100vw - 372px);
-    }
-
-    .post-title{
-        flex:1;
-        font-size: 6vh;
-    }
+@media screen and (max-width: 992px) {
+  .post {
+    flex: 50%;
+  }
 }
 
-@media screen and (max-width:500px){
-
-
-.post-share iframe, .post-share embed, .post-share object{
-    height: calc(56.25vh);
-    width: calc(100vw - 60px);
-}
-
-.post-title{
-    flex:1;
-    font-size: 6vh;
-}
+@media screen and (max-width: 600px) {
+  .post-wrapper {
+    flex-direction: column;
+  }
 }
 
 
@@ -185,23 +157,22 @@ html, body{
             var shareHtml = '';
             if(shareLink.includes('youtu')){
                 shareHtml = 
-                `<iframe width="500" height="281.25" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+                `<iframe width="300" height="255" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
             }
             if(type === "image"){
                 shareHtml  = 
-                `<img width="500" height="281.25" src=${shareLink} />`
+                `<img width="300" height="255" src=${shareLink} />`
             }
             var html = 
             `<div class='post-wrapper'>
-                <div class='post-title'>${title}</div>
-                <div class='post-image'>
+                <div class='post-title post '>${title}</div>
+                <div class='post-image post'>
                     <img src=${image} width='250px' height:'140.625' />
                 </div>
-                <div class='post-share'>
+                <div class='post-share post'>
                     ${shareHtml}
                 </div>
-                <div class='post-comment'>${caption}</div>
-                <div class='post-date'>${date}</div>
+                <div class='post-comment post'>${caption}<br/> ${date}</div>
             </div>`;
             $('.content').append(html);
         }
@@ -227,6 +198,7 @@ html, body{
     //     document.body.appendChild(raw);
     // }
 
+    const getRandomColor = ()=>Math.floor(Math.random()*16777215).toString(16);
     $(document).ready(function(){
         
         $.ajax({
@@ -235,7 +207,14 @@ html, body{
                 createPosts(data);
             }
         });
-
+        window.setInterval(function(){
+                var colorOne = getRandomColor();
+                var colorTwo = getRandomColor();
+                if(colorOne != colorTwo){
+                    $(".aka").css("background-color","#" + getRandomColor())
+                    $(".aka").css("color","#" + getRandomColor())
+                }            
+        },1000)
     });
 </script>
 </html>
