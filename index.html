@@ -113,7 +113,7 @@ html, body{
     .post-share iframe, .post-share embed, .post-share object{
         height: calc(56.25vh);
         width: calc(100vw - 372px);
-    3
+    }
 
     .post-title{
         flex:1;
@@ -186,6 +186,10 @@ html, body{
             if(shareLink.includes('youtu')){
                 shareHtml = 
                 `<iframe width="500" height="281.25" src=${shareLink} frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            }
+            if(type === "image"){
+                shareHtml  = 
+                `<img src=${shareLink} />`
             }
             var html = 
             `<div class='post-wrapper'>
